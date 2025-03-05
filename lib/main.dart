@@ -80,8 +80,13 @@ class _MyHomePageState extends State<MyHomePage> {
 }
 
 class CardsScreen extends StatefulWidget {
+  final int folderId;
+  final String folderName;
 
+  CardsScreen({required this.folderId, required this.folderName});
 
+  @override
+  _CardsScreenState createState() => _CardsScreenState();
 }
 
 class _CardsScreenState extends State<CardsScreen> {
