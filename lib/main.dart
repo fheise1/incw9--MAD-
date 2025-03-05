@@ -90,6 +90,46 @@ class CardsScreen extends StatefulWidget {
 }
 
 class _CardsScreenState extends State<CardsScreen> {
+  late Future<List<Map<String, dynamic>>> _cards;
 
+  @override
+  void initState() {
+    super.initState();
+    _cards = _fetchCards();
+  }
 
+  Future<List<Map<String, dynamic>>> _fetchCards() async {
+    final db = await DatabaseHelper.instance.database;
+    return db.query('cards', where: 'folderId = ?', whereArgs: [widget.folderId]);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text(widget.folderName)),
+      body: FutureBuilder<List<Map<String, dynamic>>>(
+        future: _cards,
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) {
+            return Center(child: CircularProgressIndicator());
+          }
+          List<Map<String, dynamic>> cards = snapshot.data!;
+          return GridView.builder(
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3),
+            itemCount: cards.length,
+            itemBuilder: (context, index) {
+              return Card(
+                child: Column(
+                  children: [
+                    Image.network(cards[index]['image']),
+                    Text(cards[index]['name']),
+                  ],
+                ),
+              );
+            },
+          );
+        },
+      ),
+    );
+  }
 }
