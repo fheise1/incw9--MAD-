@@ -112,4 +112,38 @@ class DatabaseHelper {
       whereArgs: [id],
     );
   }
+
+  // Folder CRUD operations
+  Future<int> insertFolder(Map<String, dynamic> row) async {
+    row[columnTimestamp] = DateTime.now().toIso8601String();
+    return await insert(folderTable, row);
+  }
+
+  Future<int> updateFolder(Map<String, dynamic> row) async {
+    return await update(folderTable, row);
+  }
+
+  Future<int> deleteFolder(int id) async {
+    // Delete all cards in the folder first
+    await _db.delete(
+      cardTable,
+      where: '$columnFolderId = ?',
+      whereArgs: [id],
+    );
+    // Then delete the folder
+    return await delete(folderTable, id);
+  }
+
+  // Card CRUD operations
+  Future<int> insertCard(Map<String, dynamic> row) async {
+    return await insert(cardTable, row);
+  }
+
+  Future<int> updateCard(Map<String, dynamic> row) async {
+    return await update(cardTable, row);
+  }
+
+  Future<int> deleteCard(int id) async {
+    return await delete(cardTable, id);
+  }
 }
