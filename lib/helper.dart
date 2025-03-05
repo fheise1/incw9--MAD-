@@ -19,6 +19,7 @@ class DatabaseHelper {
   late Database _db;
 
   static var instance;
+
   // this opens the database (and creates it if it doesn't exist)
   Future<void> init() async {
     final documentsDirectory = await getApplicationDocumentsDirectory();
